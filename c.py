@@ -7,3 +7,5 @@ cookies = browser_cookie3.firefox() # 或 browser_cookie3.firefox()
 with open('cookies.txt', 'w') as f:
     for cookie in cookies:
         f.write(f".{cookie.domain}\tTRUE\t{cookie.path}\t{cookie.secure}\t{cookie.expires}\t{cookie.name}\t{cookie.value}\n")
+with open('cookies.txt', 'r') as f:
+    print(f.readlines())
