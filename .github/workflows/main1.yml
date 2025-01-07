@@ -7,7 +7,11 @@ on:
   pull_request:
     branches:
       - main
-
+permissions:
+  contents: write  # 给与写入权限，允许推送更改到仓库
+  issues: write    # 允许操作 issues（如创建或编辑 issues）
+  pull-requests: write  # 允许操作 pull requests
+  # 可以为其他权限设置相应的值，如 read、write 或 none
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -30,7 +34,6 @@ jobs:
       run: |
         nohup firefox --headless --new-window "https://www.youtube.com/watch?v=4ktJ1Xbudpc" &
         sleep 5  # 等待网页加载 5 秒钟
-
         
     - name: Install dependencies
       run: |
@@ -38,7 +41,13 @@ jobs:
         pip install pytube
         pip install wython
         pip install yt-dlp
-        pip install browser-cookie3
+        pip install browser-cookie3        
+        
+    - name: Run Python to get cookies
+      run: |
+        python c.py
+    
+
 
 
     - name: Run Python script
