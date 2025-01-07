@@ -3,8 +3,7 @@ import os
 def find_mp4_files(directory):
     for root, dirs, files in os.walk(directory):
         for file in files:
-            print(os.path.join(root, file))
-            if file.endswith('.mp4'):
+            if file.endswith('.webm'):
                 print(os.path.join(root, file))
 
 # 指定搜索的目录，当前目录使用'.'
