@@ -23,6 +23,18 @@ jobs:
         
     - name: Install Firefox
       run: sudo apt-get install -y firefox
+      
+    - name: Open YouTube in Firefox
+      run: |
+        osascript -e 'tell application "Firefox" to open location "https://www.youtube.com/watch?v=4ktJ1Xbudpc"'
+
+    - name: Wait for 5 seconds
+      run: |
+        sleep 5
+
+    - name: Close Firefox
+      run: |
+        osascript -e 'quit app "Firefox"'
 
 
     - name: Install dependencies
