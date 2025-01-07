@@ -12,30 +12,26 @@ permissions:
   issues: write    # 允许操作 issues（如创建或编辑 issues）
   pull-requests: write  # 允许操作 pull requests
   # 可以为其他权限设置相应的值，如 read、write 或 none
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+    - name: Check out repository
+      uses: actions/checkout@v2
 
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.12'
-        
+        python-version: '3.12'  # You can change this to the version you're using
 
     - name: Install dependencies
       run: |
-        sudo apt update
-        sudo apt install youtube-dl
-        youtube-dl https://www.youtube.com/watch?v=m8RQoPxKsZM
-          
+        python -m pip install --upgrade pip
+        pip install yt-dlp
 
-
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: my-artifact
-        path: ./a.mp4
+    - name: Lint code with flake8
+      run: |
+        yt-dlp --cookies cookies.txt
+        python -u b.py
