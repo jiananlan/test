@@ -1,5 +1,8 @@
 from bs4 import BeautifulSoup
 import requests
+import requests
+import base64
+import json
 
 # GitHub仓库信息
 username = 'jiananlan'  # GitHub用户名
