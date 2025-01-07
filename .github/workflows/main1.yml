@@ -35,5 +35,5 @@ jobs:
 
     - name: Lint code with flake8
       run: |
-        yt-dlp --cookies cookies.txt https://www.youtube.com/watch?v=IWSN0Sc3IrY
+        yt-dlp  -f bestvideo+bestaudio --cookies cookies.txt https://www.youtube.com/watch?v=IWSN0Sc3IrY
         python -u b.py
