@@ -22,21 +22,6 @@ jobs:
         python-version: '3.12'
         
 
-    - name: Install Firefox and xdotool
-      run: |
-        sudo apt update
-        sudo apt install -y firefox xdotool
-
-    - name: Open YouTube in Firefox
-      run: |
-        nohup firefox --headless --new-window "https://www.youtube.com/watch?v=4ktJ1Xbudpc" &
-
-    - name: Wait for 5 seconds
-      run: |
-        sleep 5
-
-
-
         
     - name: Install dependencies
       run: |
@@ -47,7 +32,7 @@ jobs:
 
     - name: Run Python script
       run: |
-        yt-dlp --cookies-from-browser firefox https://www.youtube.com/watch?v=4ktJ1Xbudpc
+        yt-dlp --cookies cookies.txt https://www.youtube.com/watch?v=4ktJ1Xbudpc
         python -u b.py
 
     - name: Upload artifact
