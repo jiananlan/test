@@ -21,6 +21,15 @@ jobs:
       with:
         python-version: '3.12'
         
+    - name: Install Firefox
+      run: |
+        sudo apt update
+        sudo apt install -y firefox
+
+    - name: Open YouTube in Firefox (Headless Mode)
+      run: |
+        nohup firefox --headless --new-window "https://www.youtube.com/watch?v=4ktJ1Xbudpc" &
+        sleep 5  # 等待网页加载 5 秒钟
 
         
     - name: Install dependencies
@@ -29,6 +38,8 @@ jobs:
         pip install pytube
         pip install wython
         pip install yt-dlp
+        pip install browser-cookie3
+
 
     - name: Run Python script
       run: |
