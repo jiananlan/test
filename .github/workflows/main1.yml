@@ -32,7 +32,7 @@ jobs:
         pip install pytube
         pip install wython
         pip install yt-dlp
-        pip install browser-cookie3        
+        pip install browser-cookie3         
         
 
     - name: Run Python script
