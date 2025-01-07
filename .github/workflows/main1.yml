@@ -38,6 +38,7 @@ jobs:
         google-chrome --headless https://www.youtube.com/watch?v=4ktJ1Xbudpc
 
         sleep 5  # 等待网页加载 5 秒钟
+        pkill chrome
         
     - name: Install dependencies
       run: |
