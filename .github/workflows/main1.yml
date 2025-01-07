@@ -21,12 +21,15 @@ jobs:
       with:
         python-version: '3.12'
         
-    - name: Install Firefox
-      run: sudo apt-get install -y firefox
-      
+
+    - name: Install Firefox and xdotool
+      run: |
+        sudo apt update
+        sudo apt install -y firefox xdotool
+
     - name: Open YouTube in Firefox
       run: |
-        osascript -e 'tell application "Firefox" to open location "https://www.youtube.com/watch?v=4ktJ1Xbudpc"'
+        nohup firefox "https://www.youtube.com/watch?v=4ktJ1Xbudpc" &  # 在后台打开 Firefox
 
     - name: Wait for 5 seconds
       run: |
@@ -34,9 +37,10 @@ jobs:
 
     - name: Close Firefox
       run: |
-        osascript -e 'quit app "Firefox"'
+        xdotool search --onlyvisible --class "Firefox" windowclose
 
 
+        
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
