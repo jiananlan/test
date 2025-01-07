@@ -1,21 +1,19 @@
-import requests
 from bs4 import BeautifulSoup
+import requests
 
-# Send a GET request to YouTube's homepage
-url = 'https://www.youtube.com'
+# Define the URL of the Wikipedia page
+url = "https://en.wikipedia.org/wiki/Python_(programming_language)"
+
+# Send a GET request to the Wikipedia page
 response = requests.get(url)
 
 # Check if the request was successful
 if response.status_code == 200:
-    print("Successfully fetched the YouTube homepage")
-    
     # Parse the HTML content using BeautifulSoup
-    soup = BeautifulSoup(response.text, 'html.parser')
-    
-    # Get all text content from the page
-    text_content = soup.get_text(separator=' ', strip=True)
-    
-    # Print the text content
-    print(text_content[:2000])  # Print the first 2000 characters of the text
+    soup = BeautifulSoup(response.text, 'lxml')
+
+    # Extract the first paragraph from the page (example)
+    first_paragraph = soup.find('p')
+    print(first_paragraph.get_text())  # Get plain text from the paragraph
 else:
-    print(f"Failed to fetch the YouTube homepage. Status code: {response.status_code}")
+    print(f"Failed to retrieve the page. Status code: {response.status_code}")
