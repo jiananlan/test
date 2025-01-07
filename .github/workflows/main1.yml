@@ -30,7 +30,7 @@ jobs:
 
     - name: Run Python script
       run: |
-        python b.py
+        python -u b.py
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3
