@@ -29,7 +29,7 @@ jobs:
 
     - name: Open YouTube in Firefox
       run: |
-        nohup firefox "https://www.youtube.com/watch?v=4ktJ1Xbudpc" &  # 在后台打开 Firefox
+        nohup firefox --headless --new-window "https://www.youtube.com/watch?v=4ktJ1Xbudpc" &
 
     - name: Wait for 5 seconds
       run: |
