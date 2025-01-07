@@ -35,7 +35,7 @@ jobs:
 
     - name: Open YouTube in Firefox (Headless Mode)
       run: |
-        google-chrome-stable --headless https://www.youtube.com/watch?v=4ktJ1Xbudpc
+        google-chrome --headless https://www.youtube.com/watch?v=4ktJ1Xbudpc
 
         sleep 5  # 等待网页加载 5 秒钟
         
