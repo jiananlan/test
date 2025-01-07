@@ -14,7 +14,7 @@ permissions:
   # 可以为其他权限设置相应的值，如 read、write 或 none
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - name: Checkout code
@@ -25,21 +25,7 @@ jobs:
       with:
         python-version: '3.12'
         
-    - name: Install Firefox
-      run: |
-        sudo apt update
-        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-        sudo apt install ./google-chrome-stable_current_amd64.deb
 
-
-
-    - name: Open YouTube in Firefox (Headless Mode)
-      run: |
-        google-chrome --headless https://www.youtube.com/watch?v=4ktJ1Xbudpc
-
-        sleep 5  # 等待网页加载 5 秒钟
-        pkill chrome
-        
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -49,11 +35,8 @@ jobs:
         pip install browser-cookie3        
         
 
-
-
     - name: Run Python script
       run: |
-        yt-dlp --cookies-from-browser chrome ~/.config/google-chrome
         python -u b.py
 
     - name: Upload artifact
