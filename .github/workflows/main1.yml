@@ -28,6 +28,8 @@ jobs:
 
     - name: Install dependencies
       run: |
+        sudo apt update
+        sudo apt install ffmpeg
         python -m pip install --upgrade pip
         pip install yt-dlp
 
