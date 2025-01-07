@@ -15,6 +15,6 @@ if response.status_code == 200:
     # Extract the first paragraph from the page (example)
     first_paragraph = soup.find('p')
     print('here',first_paragraph.get_text())  
-    print(response.text)# Get plain text from the paragraph
+    print(response.text())# Get plain text from the paragraph
 else:
     print(f"Failed to retrieve the page. Status code: {response.status_code}")
