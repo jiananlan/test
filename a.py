@@ -13,8 +13,7 @@ api_url = f'https://api.github.com/repos/{username}/{repo}/contents/{file_path}?
 
 # 获取文件内容
 def get_file_content():
-    headers = {'Authorization': f'token {token}'}
-    response = requests.get(api_url, headers=headers)
+    response = requests.get(api_url)
 
     if response.status_code == 200:
         file_info = response.json()
