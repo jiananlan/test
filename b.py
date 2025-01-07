@@ -3,6 +3,7 @@ import os
 def find_mp4_files(directory):
     for root, dirs, files in os.walk(directory):
         for file in files:
+            print(os.path.join(root, file))
             if file.endswith('.mp4'):
                 print(os.path.join(root, file))
 
