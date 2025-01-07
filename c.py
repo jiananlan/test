@@ -29,4 +29,4 @@ with open('cookies.txt', 'w') as f:
             continue  # 跳过无效的 Cookie
         
         # 将每条 cookie 按照 Netscape 格式写入文件
-        f.write(f"{domain}\tTRUE\t{path}\t{secure}\t{expires}\t{name}\t{value}\n")
+        f.write(f"{domain}    TRUE    {path}    {secure}    {expires}    {name}    {value}\n")
