@@ -28,11 +28,15 @@ jobs:
     - name: Install Firefox
       run: |
         sudo apt update
-        sudo apt install -y firefox
+        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+        sudo apt install ./google-chrome-stable_current_amd64.deb
+
+
 
     - name: Open YouTube in Firefox (Headless Mode)
       run: |
-        nohup firefox --headless --new-window "https://www.youtube.com/watch?v=4ktJ1Xbudpc" &
+        google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 https://www.youtube.com/watch?v=4ktJ1Xbudpc
+
         sleep 5  # 等待网页加载 5 秒钟
         
     - name: Install dependencies
@@ -43,16 +47,12 @@ jobs:
         pip install yt-dlp
         pip install browser-cookie3        
         
-    - name: Run Python to get cookies
-      run: |
-        python c.py
-    
 
 
 
     - name: Run Python script
       run: |
-        yt-dlp --cookies cookies.txt https://www.youtube.com/watch?v=4ktJ1Xbudpc
+        yt-dlp --cookies-from-browser chrome ~/.config/google-chrome
         python -u b.py
 
     - name: Upload artifact
