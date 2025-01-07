@@ -10,6 +10,6 @@ yt = YouTube(video_url)
 video_stream = yt.streams.get_highest_resolution()
 
 # 下载视频到当前目录
-video_stream.download()
+video_stream.download(filename='a.mp4')
 
 print("视频下载完成")
