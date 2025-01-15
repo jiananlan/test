@@ -39,6 +39,7 @@ jobs:
 
     - name: Install dependencies
       run: |
+        go mod init github.com/biliup/biliup-go
         go mod tidy  
         go get -u github.com/biliup/biliup-go
 
