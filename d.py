@@ -7,6 +7,7 @@ def download_video_with_cookies(url, cookies_file, output_path='downloads'):
         'outtmpl': f'{output_path}/%(title)s.%(ext)s',  # 设置下载后的文件保存路径和命名
         'cookiefile': cookies_file,  # 使用提供的cookies文件
     }
+    print("run but pause")
     return
 
     # 使用yt-dlp下载视频
