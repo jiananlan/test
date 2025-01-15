@@ -105,4 +105,8 @@ with BiliBili(video) as bili:
         video_part = bili.upload_file(file)  # 上传视频
         video.append(video_part)  # 添加已经上传的视频
     # video.cover = bili.cover_up('/cover_path').replace('http:', '')
-    ret = bili.submit()  # 提交视频
+    try:
+        ret = bili.submit()
+        # 提交视频
+    except Exception as e:
+        print(e)
