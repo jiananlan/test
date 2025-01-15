@@ -13,7 +13,7 @@ def download_video_with_cookies(url, cookies_file, output_path='downloads'):
         ydl.download([url])
 
 
-video_url = 'https://www.youtube.com/watch?v=Kfa63swYwJw'  # 替换为实际的YouTube视频链接
+video_url = 'https://www.youtube.com/watch?v=42v4Xm6bv50'  # 替换为实际的YouTube视频链接
 cookies_file = 'cookies.txt'  # 替换为你自己的cookies文件路径
 download_video_with_cookies(video_url, cookies_file)
     
@@ -86,9 +86,9 @@ def find_video_files():
 
 find_video_files()
 video = Data()
-video.title = video_files[0].split('/')[-1].split('.')[0]
+video.title = video_files[0].split('/')[-1].split('.')[0]+"  [3分钟航空]"
 print(video.title)
-video.desc = '3分钟航空-3 Minutes of Aviation   '+video.title
+video.desc = '3分钟航空-3 Minutes of Aviation   '+video.title.split('[')[0]
 video.source = video_url
 # 设置视频分区,默认为160 生活分区
 video.tid = 232
@@ -100,6 +100,6 @@ with BiliBili(video) as bili:
     for file in video_files:
         video_part = bili.upload_file(file)  # 上传视频
         video.append(video_part)  # 添加已经上传的视频
-    video.cover = bili.cover_up('/cover_path').replace('http:', '')
+    #video.cover = bili.cover_up('/cover_path').replace('http:', '')
     ret = bili.submit()  # 提交视频
 
