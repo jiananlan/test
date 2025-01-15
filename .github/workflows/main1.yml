@@ -24,25 +24,6 @@ jobs:
       with:
         python-version: '3.12'  # You can change this to the version you're using
 
-    - name: Set up Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: '1.18'  # 设置Go的版本，可以根据需要修改
-
-    - name: Cache Go modules
-      uses: actions/cache@v2
-      with:
-        path: ~/.cache/go-build
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-
-
-    - name: Install dependencies
-      run: |
-        go mod init github.com/biliup/biliup-go
-        go mod tidy  
-        go get -u github.com/biliup/biliup-go
-
     - name: Install dependencies
       run: |
         sudo apt update
