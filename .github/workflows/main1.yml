@@ -1,9 +1,6 @@
 name: Python CI with Artifact Upload
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
