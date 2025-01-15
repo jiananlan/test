@@ -3,7 +3,7 @@ import yt_dlp
 def download_video_with_cookies(url, cookies_file, output_path='downloads'):
     # 配置下载选项
     ydl_opts = {
-        'format': 'bestvideo+bestaudio/best',  # 下载最佳质量的视频
+        'format': 'best',  # 下载最佳质量的视频
         'outtmpl': f'{output_path}/%(title)s.%(ext)s',  # 设置下载后的文件保存路径和命名
         'cookiefile': cookies_file,  # 使用提供的cookies文件
     }
