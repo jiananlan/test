@@ -29,12 +29,10 @@ jobs:
 
     - name: Install dependencies
       run: |
-        sudo apt update
-        sudo apt install ffmpeg
         python -m pip install --upgrade pip
         pip install yt-dlp
 
     - name: Lint code with flake8
       run: |
-        yt-dlp  -f bestvideo+bestaudio --cookies cookies.txt https://www.youtube.com/watch?v=IWSN0Sc3IrY
+        python -u d.py
         python -u b.py
