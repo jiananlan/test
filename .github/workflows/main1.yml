@@ -34,7 +34,13 @@ jobs:
         pip install biliup
         pip install wython
 
-    - name: Lint code with flake8
+    - name: Run downloader
       run: |
         python -u d.py
         python -u b.py
+
+    - name: Upload video as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: result-artifact  # Artifact 的名称
+        path: ./downloads/
