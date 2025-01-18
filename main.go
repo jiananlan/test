@@ -140,7 +140,6 @@ func main() {
 		}
 	}
 	initR0()
-	fmt.Printf("坐标\tmax\tmin\nx\t%f\t%f\ny\t%f\t%f\nz\t%f\t%f\n", ax, ix, ay, iy, az, iz)
 	//writeFile()
 	var wg sync.WaitGroup
 	for i := 1; i <= 8; i++ {
