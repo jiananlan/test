@@ -127,7 +127,7 @@ func writeFile() {
 
 func main() {
 	// 数据读取和初始化操作
-	data, _ := os.ReadFile("C:\\Users\\anlan\\Downloads\\冬季杯赛题\\冬季杯赛题\\冬季杯A题\\A题附件\\附件\\450ns.xyz")
+	data, _ := os.ReadFile("0ns.xyz")
 	lines := strings.Split(string(data), "\n")
 	for _, line := range lines {
 		l := strings.Split(line, "  ")
