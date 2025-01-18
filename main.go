@@ -127,8 +127,8 @@ func writeFile() {
 
 func main() {
 	// 数据读取和初始化操作
-	data, _ := os.ReadFile("20ns.xyz")
-	fmt.Println(20)
+	data, _ := os.ReadFile("30ns.xyz")
+	fmt.Println(30)
 	lines := strings.Split(string(data), "\n")
 	for _, line := range lines {
 		l := strings.Split(line, "  ")
