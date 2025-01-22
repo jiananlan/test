@@ -34,7 +34,7 @@ jobs:
     - name: Run
       run: ./main
 ```
-3.利用Github令牌，设置Python程序更改main分支中main.go代码文件，这就回启动Github workflow
+3.利用Github令牌，设置Python程序更改main分支中main.go代码文件，这就会启动Github workflow
 ```python
 import time
 import requests
