@@ -1,6 +1,10 @@
 name: Python Connect to MongoDB in GitHub Actions
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   test:
