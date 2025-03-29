@@ -1,4 +1,4 @@
-name: Run MongoDB in GitHub Actions
+name: Python Connect to MongoDB in GitHub Actions
 
 on: [push, pull_request]
 
@@ -11,18 +11,24 @@ jobs:
         ports:
           - 27017:27017
         options: >-
-          --health-cmd "mongo --eval 'db.runCommand({ping: 1})'" 
-          --health-interval 10s 
-          --health-timeout 5s 
+          --health-cmd "mongo --eval 'db.runCommand({ping: 1})'"
+          --health-interval 10s
+          --health-timeout 5s
           --health-retries 5
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install MongoDB client
-        run: sudo apt-get install -y mongodb-clients
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
 
-      - name: Test MongoDB connection
+      - name: Install dependencies
         run: |
-          mongo --host localhost --eval 'db.runCommand({ ping: 1 })'
+          python -m pip install --upgrade pip
+          pip install pymongo
+
+      - name: Run Python script to connect MongoDB
+        run: python connect_mongo.py
