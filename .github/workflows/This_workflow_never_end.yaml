@@ -19,7 +19,7 @@ jobs:
 
 
       - name: Run long Python script
-        run: python long_script.py || echo "Python script exited with error"
+        run: python -u long_script.py || echo "Python script exited with error"
 
       - name: Start new workflow if timeout is near
         if: always()
