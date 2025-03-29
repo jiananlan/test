@@ -17,8 +17,6 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
 
       - name: Run long Python script
         run: python long_script.py || echo "Python script exited with error"
