@@ -1,0 +1,28 @@
+name: Run MongoDB in GitHub Actions
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:6.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongo --eval 'db.runCommand({ping: 1})'" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install MongoDB client
+        run: sudo apt-get install -y mongodb-clients
+
+      - name: Test MongoDB connection
+        run: |
+          mongo --host localhost --eval 'db.runCommand({ ping: 1 })'
