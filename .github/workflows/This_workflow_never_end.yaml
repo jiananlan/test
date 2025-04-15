@@ -7,6 +7,9 @@ jobs:
   run-python:
     runs-on: ubuntu-latest
     timeout-minutes: 355  # 5 小时 55 分钟
+    
+    env:
+      TEST_SECRET: ${{ secrets.TEST_SECRET }}
 
     steps:
       - name: Checkout code
