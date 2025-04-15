@@ -10,5 +10,5 @@ while True:
   # 使用 secret（以下为示例，请勿打印真实 secret）
   print("Secret loaded successfully.",my_secret,str(my_secret),my_secret[0],my_secret=="test",end=' ')  # 删掉敏感输出
   for x in my_secret:
-    print(x,end='')
+    print(x,end='-')
   print()
