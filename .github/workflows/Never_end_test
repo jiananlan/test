@@ -21,7 +21,7 @@ jobs:
           python-version: '3.10'
 
       - name: Run long Python script
-        run: python -u long_script.py || echo "Python script exited with error"
+        run: python -u long_script_1.py || echo "Python script exited with error"
 
       - name: Start new workflow if timeout is near
         if: always()
