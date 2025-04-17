@@ -1,14 +1,14 @@
+import time
+import os
+from datetime import datetime
+start_time = time.time()
+
 while True:
-  from datetime import datetime
-  current_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-  print("Current Date and Time:", current_datetime)
-  import time 
-  time.sleep(5)
-  import os
-  my_secret = os.environ['TEST_SECRET']
-  
-  # 使用 secret（以下为示例，请勿打印真实 secret）
-  print("Secret loaded successfully.",my_secret,str(my_secret),my_secret[0],my_secret=="test",end=' ')  # 删掉敏感输出
-  for x in my_secret:
-    print(x,end='-')
-  print()
+    current_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print("Current Date and Time:", current_datetime)
+    elapsed_time = time.time() - start_time
+    print(f"Elapsed Time (seconds since start): {elapsed_time:.2f} seconds")
+    my_secret = os.environ['TEST_SECRET']
+    print("Secret loaded successfully.")
+    print("Secret length:", len(my_secret)) 
+    time.sleep(5)
