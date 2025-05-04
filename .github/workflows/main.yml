@@ -29,4 +29,4 @@ jobs:
 
     - name: Run Python script
       run: |
-        python -u a.py  # Replace with the path to your Python file
+        python -u run.py  # Replace with the path to your Python file
