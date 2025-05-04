@@ -26,6 +26,9 @@ jobs:
         pip install beautifulsoup4
         pip install lxml
         pip install wython
+        pip install torch 
+        pip install --upgrade torch accelerate transformers diffusers
+
 
     - name: Run Python script
       run: |
