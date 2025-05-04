@@ -28,6 +28,7 @@ jobs:
         pip install wython
         pip install torch 
         pip install --upgrade torch accelerate transformers diffusers
+        pip install torchao
 
 
     - name: Run Python script
