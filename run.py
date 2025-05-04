@@ -29,7 +29,7 @@ pipe = AutoPipelineForText2Image.from_pretrained(
     text_encoder_2=text_encoder_2,
     custom_pipeline=name_or_path,
     torch_dtype=dtype
-).to("cuda")
+)
 
 image = pipe(
     prompt="A white friendly robotic dog sitting on a bench",
