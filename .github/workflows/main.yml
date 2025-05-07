@@ -23,12 +23,9 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install requests
-        pip install beautifulsoup4
         pip install lxml
         pip install wython
-        pip install torch 
-        pip install --upgrade torch accelerate transformers diffusers
-        pip install torchao
+
 
 
     - name: Run Python script
