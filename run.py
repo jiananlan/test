@@ -10,19 +10,45 @@ def run(cmd, env=None):
         sys.exit(proc.returncode)
     return proc
 
-def check_gcc9():
-    print("检查gcc版本...")
+def get_gcc_version():
     try:
         output = subprocess.check_output("gcc --version", shell=True).decode()
-        if "gcc" in output and " 9." in output.split("\n")[0]:
-            print("已检测到gcc 9.x")
-            return True
+        for line in output.splitlines():
+            if line.startswith("gcc"):
+                versionstr = line.split()[-1]
+                return versionstr.strip()
+    except Exception:
+        return None
+    return None
+
+def uninstall_install_gcc9():
+    print('\n检测并处理gcc/g++版本...\n')
+    version = get_gcc_version()
+    if not version or not version.startswith("9."):
+        print('\n[警告] 当前GCC版本为: %s ，需要切换为gcc-9 ...\n' % (version if version else '未安装'))
+        print('[自动操作] 卸载旧gcc，并安装gcc-9和g++-9（需要sudo权限）...\n')
+
+        # 可能需要保留其它程序依赖的版本，你可按需调整用于完整卸载
+        run("sudo apt-get update")
+        # 卸载当前gcc/g++
+        run("sudo apt-get -y remove --purge gcc g++")
+        # 安装gcc-9 g++-9
+        run("sudo apt-get -y install gcc-9 g++-9")
+        # 配置默认gcc为9
+        run("sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 90")
+        run("sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 90")
+        # 可选：如果之前存在gcc和g++其它替代方案，可用--set强制选择9
+        run("sudo update-alternatives --set gcc /usr/bin/gcc-9")
+        run("sudo update-alternatives --set g++ /usr/bin/g++-9")
+
+        newver = get_gcc_version()
+        if newver and newver.startswith("9."):
+            print(f"\n[OK] 已自动切换到gcc-9，当前版本: {newver}\n")
         else:
-            print("[错误] 当前gcc不是9.x版本，请手动安装并切换到gcc-9")
-            return False
-    except:
-        print("[错误] 未找到gcc，请手动安装gcc-9")
-        return False
+            print(f"[错误] 自动换GCC-9失败，请手动处理！")
+            sys.exit(12)
+    else:
+        print(f"[信息] 当前GCC已是9.x，无需更改。")
 
 def extract_tar(tarfile, target):
     if not os.path.exists(target):
@@ -56,7 +82,6 @@ def build_hypre(src, install_dir, mpich_bin):
     os.chdir("..")
 
 def extract_flash(tarfile):
-    # 假设FLASH为预编译版本，直接解压到当前目录
     print(f"[解压] {tarfile} 到当前目录")
     run(f"tar -xf {tarfile} -C .")
     print("FLASH已解压，目录内容如下（部分）:")
@@ -93,15 +118,15 @@ def main():
     mpich_tar = "mpich-3.2.tar.gz"
     hdf5_tar = "hdf5-1.8.12.tar.gz"
     hypre_tar = "hypre-2.9.0b.tar.gz"
-    flash_tar = "FLASH4.6.2.tar.gz"    # 预编译包
+    flash_tar = "FLASH4.6.2.tar.gz"
     # 检查包
     for fn in [mpich_tar, hdf5_tar, hypre_tar, flash_tar]:
         if not os.path.exists(fn):
             print(f"[缺少文件] {fn}, 请补全后重试。")
             sys.exit(10)
-    # 检查gcc-9
-    if not check_gcc9():
-        sys.exit(11)
+
+    # 尝试自动卸载并安装 gcc-9
+    uninstall_install_gcc9()
     # 依赖解压、编译、安装
     print("\n#### 安装MPICH ####")
     mpich_src = "mpich_src"
@@ -120,18 +145,18 @@ def main():
     hypre_install = os.path.abspath("hypre_install")
     extract_tar(hypre_tar, hypre_src)
     build_hypre(hypre_src, hypre_install, mpich_install + "/bin")
-    
+
     print("\n#### 解压FLASH预编译包 ####")
     extract_flash(flash_tar)
 
     print("\n========== 所有依赖已安装并配置环境变量 ==========")
     append_env_to_bashrc(mpich_install, hdf5_install, hypre_install)
     print("\n[说明]")
-    print("1. 依赖库已自动安装，环境变量已加入.bashrc。建议手动执行: source ~/.bashrc")
-    print("2. 若需运行FLASH，使用mpirun/mpiexec等命令。例如：")
-    print("     mpirun -np 4 ./flash4")
-    print("3. 如果FLASH可执行文件名称或运行方法不同，请参考供应者的文档及README。")
-    print("4. 若出现找不到libmpi.so等错误，请确认.bashrc已生效，或手动export一次环境变量。")
+    print(" 1. 依赖库已自动安装，环境变量已加入.bashrc。建议手动执行: source ~/.bashrc")
+    print(" 2. 若需运行FLASH，使用mpirun/mpiexec等命令。例如：")
+    print("      mpirun -np 4 ./flash4")
+    print(" 3. 如果FLASH可执行文件名称或运行方法不同，请参考供应者的文档及README。")
+    print(" 4. 若出现找不到libmpi.so等错误，请确认.bashrc已生效，或手动export一次环境变量。")
 
 if __name__ == "__main__":
     main()
