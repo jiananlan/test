@@ -2,6 +2,9 @@ name: Run Python Script
 
 on:
   workflow_dispatch:  
+  push:
+    branches:
+      - main 
   pull_request:
     branches:
       - main  # Trigger the workflow on pull requests to the main branch
