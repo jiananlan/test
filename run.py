@@ -47,6 +47,7 @@ def install_gfortran9():
         run("sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y")
         run("sudo apt-get update")
     run("sudo apt-get install -y gfortran-9")
+    run('sudo ln -sf $(which gfortran-9) /usr/bin/gfortran')
     if check_gfortran9():
         print("gfortran-9 安装成功。")
     else:
