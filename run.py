@@ -170,6 +170,10 @@ def main():
     mpich_install = os.path.abspath("mpich_install")
     extract_tar(mpich_tar, mpich_src)
     build_mpich(mpich_src, mpich_install)
+    run("which mpif90")
+    run("mpif90 -show")
+    run("which gfortran")
+    
 
     print("\n#### 安装HDF5 ####")
     hdf5_src = "hdf5_src"
