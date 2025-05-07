@@ -1,6 +1,6 @@
 name: Python Connect to MongoDB (Manual Docker)
 
-on: [push, pull_request]
+
 
 jobs:
   test:
