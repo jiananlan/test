@@ -94,7 +94,7 @@ def build_mpich(src, install_dir):
     run("make -j$(nproc)")
     run("make install")
     run('echo "export PATH=$install_dir/bin:\$PATH" >> ~/.m_bashrc')
-    run("source ~/.m_bashrc")
+    run(". ~/.m_bashrc")
     os.chdir("..")
 
 def build_hdf5(src, install_dir, mpich_bin):
