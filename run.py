@@ -89,7 +89,7 @@ def extract_tar(tarfile, target):
 
 def build_mpich(src, install_dir):
     os.chdir(src)
-    run(f"./configure --prefix={install_dir}")
+    run(f"./configure --prefix={install_dir} CC=gcc CXX=g++ FC=gfortran F77=gfortran")
     run("make -j$(nproc)")
     run("make install")
     os.chdir("..")
