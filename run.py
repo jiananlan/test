@@ -21,6 +21,37 @@ def get_gcc_version():
         return None
     return None
 
+def check_gfortran9():
+    try:
+        output = subprocess.check_output("gfortran-9 --version", shell=True).decode()
+        if "Fortran" in output:
+            return True
+    except Exception:
+        return False
+    return False
+
+def install_gfortran9():
+    print("\n=> 检查 gfortran-9 是否已安装...")
+    if check_gfortran9():
+        print("gfortran-9 已安装。")
+        return
+
+    # 更新 APT 并安装 gfortran-9
+    print("未检测到 gfortran-9，正在安装...")
+    # 有些 Ubuntu 版本需要添加 toolchain PPA
+    run("sudo apt-get update")
+    res = subprocess.call("apt-cache policy gfortran-9", shell=True)
+    if res != 0:
+        print("gfortran-9 不在默认仓库，尝试添加 PPA...")
+        run("sudo apt-get install -y software-properties-common")
+        run("sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y")
+        run("sudo apt-get update")
+    run("sudo apt-get install -y gfortran-9")
+    if check_gfortran9():
+        print("gfortran-9 安装成功。")
+    else:
+        print("gfortran-9 安装失败，请检查错误信息。")
+
 def uninstall_install_gcc9():
     print('\n检测并处理gcc/g++版本...\n')
     version = get_gcc_version()
@@ -127,6 +158,7 @@ def main():
 
     # 尝试自动卸载并安装 gcc-9
     uninstall_install_gcc9()
+    install_gfortran9()
     # 依赖解压、编译、安装
     print("\n#### 安装MPICH ####")
     mpich_src = "mpich_src"
