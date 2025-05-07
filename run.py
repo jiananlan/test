@@ -99,7 +99,7 @@ def build_hdf5(src, install_dir, mpich_bin):
     os.chdir(src)
     env = os.environ.copy()
     env['CC'] = f"{mpich_bin}/mpicc"
-    run(f"./configure --prefix={install_dir} --enable-parallel", env=env)
+    run(f"./configure --prefix={install_dir} --enable-parallel --enable-fortran", env=env)
     run("make -j$(nproc)")
     run("make install")
     os.chdir("..")
@@ -108,7 +108,7 @@ def build_hypre(src, install_dir, mpich_bin):
     os.chdir(src)
     env = os.environ.copy()
     env["CC"] = f"{mpich_bin}/mpicc"
-    run(f"./configure --prefix={install_dir} --with-MPI", env=env)
+    run(f"./configure --prefix={install_dir} CC=mpicc CXX=mpic++ FC=mpif90 F77=mpif90", env=env)
     run("make -j$(nproc)")
     run("make install")
     os.chdir("..")
