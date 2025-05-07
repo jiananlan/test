@@ -25,12 +25,10 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install requests
-        pip install lxml
         pip install wython
 
 
 
     - name: Run Python script
       run: |
-        python -u run.py  # Replace with the path to your Python file
+        python -u Physics_is_all_you_need_rather_than_FLASH_installation.py  # Replace with the path to your Python file
