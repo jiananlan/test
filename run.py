@@ -163,6 +163,7 @@ def main():
     run('which gcc')
     run('gcc --version')
     run('gfortran --version')
+    sys.exit(20060526)
     # 依赖解压、编译、安装
     print("\n#### 安装MPICH ####")
     mpich_src = "mpich_src"
