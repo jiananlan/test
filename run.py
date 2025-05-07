@@ -93,6 +93,8 @@ def build_mpich(src, install_dir):
     run(f"./configure --prefix={install_dir} CC=gcc CXX=g++ FC=gfortran F77=gfortran")
     run("make -j$(nproc)")
     run("make install")
+    run("echo "export PATH=$install_dir/bin:\$PATH" >> ~/.bashrc")
+    run("source ~/.bashrc")
     os.chdir("..")
 
 def build_hdf5(src, install_dir, mpich_bin):
