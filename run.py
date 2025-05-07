@@ -159,6 +159,10 @@ def main():
     # 尝试自动卸载并安装 gcc-9
     uninstall_install_gcc9()
     install_gfortran9()
+    run('which gfortran')
+    run('which gcc')
+    run('gcc --version')
+    run('gfortran --version')
     # 依赖解压、编译、安装
     print("\n#### 安装MPICH ####")
     mpich_src = "mpich_src"
