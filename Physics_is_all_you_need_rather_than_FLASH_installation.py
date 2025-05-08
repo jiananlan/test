@@ -117,10 +117,12 @@ def build_hypre(src, install_dir, mpich_bin):
     run('ls')
     run("pwd")
     run(f"./src/configure --prefix={install_dir} CC=mpicc CXX=mpic++ FC=mpif90 F77=mpif90", env=env)
+    os.chdir("src")
     run('ls')
     run("pwd")
     run("make -j$(nproc)")
     run("make install")
+    os.chdir("..")
     os.chdir("..")
 
 def extract_flash(tarfile):
