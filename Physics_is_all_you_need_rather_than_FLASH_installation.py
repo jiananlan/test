@@ -114,6 +114,8 @@ def build_hypre(src, install_dir, mpich_bin):
     os.chdir(src)
     env = os.environ.copy()
     env["CC"] = f"{mpich_bin}/mpicc"
+    run('ls')
+    run("pwd")
     run(f"./configure --prefix={install_dir} CC=mpicc CXX=mpic++ FC=mpif90 F77=mpif90", env=env)
     run("make -j$(nproc)")
     run("make install")
