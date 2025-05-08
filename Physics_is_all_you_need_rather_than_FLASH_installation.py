@@ -105,7 +105,7 @@ def build_hdf5(src, install_dir, mpich_bin):
     env['CC'] = f"{mpich_bin}/mpicc"
     run('ls')
     run("pwd")
-    run(f"./hdf5-1.8.12/configure --prefix={install_dir} --enable-parallel --enable-fortran", env=env)
+    run(f"./configure --prefix={install_dir} --enable-parallel --enable-fortran", env=env)
     run("make -j$(nproc)")
     run("make install")
     os.chdir("..")
