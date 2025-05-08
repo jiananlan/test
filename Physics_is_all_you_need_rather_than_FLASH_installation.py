@@ -95,6 +95,7 @@ def build_mpich(src, install_dir):
     run("make install")
     run('echo "export PATH=$install_dir/bin:\$PATH" >> ~/.bashrc')
     run(". ~/.bashrc")
+    run("ls {install_dir}/bin")
     os.chdir("..")
 
 def build_hdf5(src, install_dir, mpich_bin):
