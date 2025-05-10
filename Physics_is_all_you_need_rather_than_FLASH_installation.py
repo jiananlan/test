@@ -2,6 +2,7 @@ import os
 import subprocess
 import sys
 
+
 def run(cmd, env=None):
     print(f"\n=> 正在执行: {cmd}\n")
     proc = subprocess.run(cmd, shell=True, env=env)
@@ -9,6 +10,7 @@ def run(cmd, env=None):
         print(f"\n命令失败: {cmd}\n")
         sys.exit(proc.returncode)
     return proc
+
 
 def get_gcc_version():
     try:
@@ -21,6 +23,7 @@ def get_gcc_version():
         return None
     return None
 
+
 def check_gfortran9():
     try:
         output = subprocess.check_output("gfortran-9 --version", shell=True).decode()
@@ -29,6 +32,7 @@ def check_gfortran9():
     except Exception:
         return False
     return False
+
 
 def install_gfortran9():
     print("\n=> 检查 gfortran-9 是否已安装...")
@@ -52,6 +56,7 @@ def install_gfortran9():
         print("gfortran-9 安装成功。")
     else:
         print("gfortran-9 安装失败，请检查错误信息。")
+
 
 def uninstall_install_gcc9():
     print('\n检测并处理gcc/g++版本...\n')
@@ -82,11 +87,13 @@ def uninstall_install_gcc9():
     else:
         print(f"[信息] 当前GCC已是9.x，无需更改。")
 
+
 def extract_tar(tarfile, target):
     if not os.path.exists(target):
         os.makedirs(target)
     print(f"[解压] {tarfile} --> {target}")
     run(f"tar -xf {tarfile} -C {target} --strip-components=1")
+
 
 def build_mpich(src, install_dir):
     os.chdir(src)
@@ -99,6 +106,7 @@ def build_mpich(src, install_dir):
     os.environ["PATH"] = f"{install_dir}/bin:" + os.environ["PATH"]
     os.chdir("..")
 
+
 def build_hdf5(src, install_dir, mpich_bin):
     os.chdir(src)
     env = os.environ.copy()
@@ -109,6 +117,7 @@ def build_hdf5(src, install_dir, mpich_bin):
     run("make -j$(nproc)")
     run("make install")
     os.chdir("..")
+
 
 def build_hypre(src, install_dir, mpich_bin):
     os.chdir(src)
@@ -122,6 +131,7 @@ def build_hypre(src, install_dir, mpich_bin):
     run("make -C src -j$(nproc)")
     run("make -C src install")
     os.chdir("..")
+    sys.exit(20060527)
 
 
 def extract_flash(tarfile):
@@ -131,6 +141,7 @@ def extract_flash(tarfile):
     for f in os.listdir('.'):
         if f.lower().startswith("flash"):
             print("-", f)
+
 
 def append_env_to_bashrc(mpich_install, hdf5_install, hypre_install):
     home = os.path.expanduser("~")
@@ -155,6 +166,7 @@ export C_INCLUDE_PATH=$MPI_HOME/include:$C_INCLUDE_PATH
         with open(bashrc, "a") as f:
             f.write(env_text)
         print(f"\n[OK] 已写入环境变量到 {bashrc}。\n你需要运行：source ~/.bashrc 以便立即生效。\n")
+
 
 def main():
     cwd = os.getcwd()
@@ -184,7 +196,6 @@ def main():
     run("which mpif90")
     run("mpif90 -show")
     run("which gfortran")
-    
 
     print("\n#### 安装HDF5 ####")
     hdf5_src = "hdf5_src"
@@ -204,11 +215,8 @@ def main():
     print("\n========== 所有依赖已安装并配置环境变量 ==========")
     append_env_to_bashrc(mpich_install, hdf5_install, hypre_install)
     print("\n[说明]")
-    print(" 1. 依赖库已自动安装，环境变量已加入.bashrc。建议手动执行: source ~/.bashrc")
-    print(" 2. 若需运行FLASH，使用mpirun/mpiexec等命令。例如：")
-    print("      mpirun -np 4 ./flash4")
-    print(" 3. 如果FLASH可执行文件名称或运行方法不同，请参考供应者的文档及README。")
-    print(" 4. 若出现找不到libmpi.so等错误，请确认.bashrc已生效，或手动export一次环境变量。")
+    print('见https://zhuanlan.zhihu.com/p/17167173342')
+
 
 if __name__ == "__main__":
     main()
