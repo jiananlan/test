@@ -1,0 +1,38 @@
+name: Magnet Downloader
+
+on:
+  push:
+    paths:
+      - magnet_list.txt  # 当该文件变更时触发
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install python-libtorrent==2.0.7
+
+      - name: Run download script
+        run: python download_magnets.py
+
+      - name: Upload downloaded files
+        uses: actions/upload-artifact@v3
+        with:
+          name: downloaded-content
+          path: downloads/
+
+      - name: Upload download log
+        uses: actions/upload-artifact@v3
+        with:
+          name: download-log
+          path: output.txt
