@@ -1,67 +1,53 @@
-const fs = require('fs').promises;
-const path = require('path');
 const WebTorrent = require('webtorrent');
+const fs = require('fs');
+const path = require('path');
 
-async function downloadMagnets() {
-  const client = new WebTorrent();
-  const outputLog = [];
+const client = new WebTorrent();
+const savePath = path.join(__dirname, 'downloads');
+const magnets = fs.readFileSync('magnet_list.txt', 'utf-8')
+  .split('\n')
+  .map(line => line.trim())
+  .filter(line => line.startsWith('magnet:'));
 
-  // Read magnet links from file
-  const input = await fs.readFile('magnet_list.txt', 'utf-8');
-  const magnets = input.split('\n').map(line => line.trim()).filter(line => line.startsWith('magnet:'));
-  
-  // Create downloads directory if it doesn't exist
-  await fs.mkdir('downloads', { recursive: true });
+if (!fs.existsSync(savePath)) fs.mkdirSync(savePath);
 
-  for (const magnet of magnets) {
-    console.log(`Starting download: ${magnet}`);
-    outputLog.push(`Starting download: ${magnet}`);
+const outputLog = [];
 
-    try {
-      // Download with progress tracking
-      await new Promise((resolve, reject) => {
-        client.add(magnet, { path: './downloads' }, torrent => {
-          // Log torrent metadata when available
-          console.log(`Torrent name: ${torrent.name}`);
-          outputLog.push(`Torrent name: ${torrent.name}`);
+function downloadOne(magnet, callback) {
+  console.log(`开始下载: ${magnet}`);
+  client.add(magnet, { path: savePath }, torrent => {
+    const interval = setInterval(() => {
+      const percent = (torrent.progress * 100).toFixed(2);
+      const speed = (torrent.downloadSpeed / 1024).toFixed(2);
+      const peers = torrent.numPeers;
+      process.stdout.write(`\r下载进度: ${percent}% | 速度: ${speed} KB/s | Peers: ${peers}`);
+    }, 1000);
 
-          // Track progress
-          torrent.on('download', () => {
-            const progress = (torrent.progress * 100).toFixed(2);
-            const speed = (torrent.downloadSpeed / 1024 / 1024).toFixed(2); // MB/s
-            const downloaded = (torrent.downloaded / 1024 / 1024).toFixed(2); // MB
-            const total = (torrent.length / 1024 / 1024).toFixed(2); // MB
-            console.log(`Progress: ${progress}% | Speed: ${speed} MB/s | Downloaded: ${downloaded} MB / ${total} MB`);
-            outputLog.push(`Progress: ${progress}% | Speed: ${speed} MB/s | Downloaded: ${downloaded} MB / ${total} MB`);
-          });
+    torrent.on('done', () => {
+      clearInterval(interval);
+      console.log(`\n✅ 下载完成: ${torrent.name}`);
+      outputLog.push(`成功下载: ${torrent.name} | ${magnet}`);
+      callback();
+    });
 
-          torrent.on('done', () => {
-            console.log(`Completed: ${magnet}`);
-            outputLog.push(`Completed: ${magnet}`);
-            resolve();
-          });
-
-          torrent.on('error', err => {
-            console.error(`Error downloading ${magnet}: ${err.message}`);
-            outputLog.push(`❌ Error downloading ${magnet}: ${err.message}`);
-            reject(err);
-          });
-        });
-      });
-    } catch (err) {
-      console.error(`Failed to download: ${magnet}`);
-      outputLog.push(`❌ Failed to download: ${magnet}`);
-    }
-  }
-
-  // Write logs to file
-  await fs.writeFile('output.txt', outputLog.join('\n'));
-
-  // Clean up WebTorrent client
-  client.destroy();
+    torrent.on('error', err => {
+      clearInterval(interval);
+      console.error(`\n❌ 下载失败: ${err.message}`);
+      outputLog.push(`失败: ${magnet} | ${err.message}`);
+      callback();
+    });
+  });
 }
 
-downloadMagnets().catch(err => {
-  console.error('Script error:', err);
-  process.exit(1);
-});
+function downloadAll(index = 0) {
+  if (index >= magnets.length) {
+    fs.writeFileSync('output.txt', outputLog.join('\n'));
+    console.log('\n📄 所有任务完成，结果写入 output.txt');
+    client.destroy();
+    return;
+  }
+
+  downloadOne(magnets[index], () => downloadAll(index + 1));
+}
+
+downloadAll();
