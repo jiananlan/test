@@ -1,34 +1,41 @@
-name: Download Magnet Links
+name: WebTorrent Magnet Downloader
+
 on:
   push:
-    branches:
-      - main
+    paths:
+      - magnet_list.txt
+
 jobs:
   download:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Node.js
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '16'
-      - name: List repository files
-        run: ls -R
-      - name: Install dependencies
-        run: |
-          npm install webtorrent
-          npm audit fix
-      - name: Run download script
-        run: node download-magnets.js
-      - name: Upload artifacts
-        if: success() || failure()
+          node-version: '20'
+
+      - name: Install webtorrent-cli
+        run: npm install -g webtorrent-cli
+      
+      - name: Install webtorrent
+        run: npm install webtorrent
+
+        
+      - name: Run magnet download script
+        run: node download_magnets.js
+
+      - name: Upload downloaded files
         uses: actions/upload-artifact@v4
         with:
-          name: downloads
+          name: downloaded-content
           path: downloads/
-      - name: Upload log
-        if: success() || failure()
+
+      - name: Upload download log
         uses: actions/upload-artifact@v4
         with:
-          name: output-log
+          name: download-log
           path: output.txt
