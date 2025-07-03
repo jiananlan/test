@@ -20,7 +20,11 @@ jobs:
 
       # ✅ 1. 写入 package.json，声明这是一个 ES module 项目
       - name: Write package.json
-        run: echo '{"type": "module"}' > package.json
+        run: |
+          echo '{
+            "type": "module"
+          }' > package.json
+
 
       # ✅ 2. 安装依赖：webtorrent（基于 ESM）
       - name: Install webtorrent
