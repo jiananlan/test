@@ -1,11 +1,4 @@
-name: Python CI with Artifact Upload
-
-on:
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:  
-permissions:
+name:
   contents: write  # 给与写入权限，允许推送更改到仓库
   issues: write    # 允许操作 issues（如创建或编辑 issues）
   pull-requests: write  # 允许操作 pull requests
