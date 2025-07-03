@@ -1,15 +1,19 @@
-const WebTorrent = require('webtorrent');
-const fs = require('fs');
-const path = require('path');
+import WebTorrent from 'webtorrent';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const client = new WebTorrent();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const savePath = path.join(__dirname, 'downloads');
+if (!fs.existsSync(savePath)) fs.mkdirSync(savePath);
+
 const magnets = fs.readFileSync('magnet_list.txt', 'utf-8')
   .split('\n')
   .map(line => line.trim())
   .filter(line => line.startsWith('magnet:'));
-
-if (!fs.existsSync(savePath)) fs.mkdirSync(savePath);
 
 const outputLog = [];
 
@@ -20,7 +24,7 @@ function downloadOne(magnet, callback) {
       const percent = (torrent.progress * 100).toFixed(2);
       const speed = (torrent.downloadSpeed / 1024).toFixed(2);
       const peers = torrent.numPeers;
-      process.stdout.write(`\r下载进度: ${percent}% | 速度: ${speed} KB/s | Peers: ${peers}`);
+      process.stdout.write(`\r进度: ${percent}% | 速度: ${speed} KB/s | Peers: ${peers}`);
     }, 1000);
 
     torrent.on('done', () => {
