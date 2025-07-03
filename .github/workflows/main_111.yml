@@ -18,23 +18,28 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install webtorrent-cli
-        run: npm install -g webtorrent-cli
-      
+      # ✅ 1. 写入 package.json，声明这是一个 ES module 项目
+      - name: Write package.json
+        run: echo '{"type": "module"}' > package.json
+
+      # ✅ 2. 安装依赖：webtorrent（基于 ESM）
       - name: Install webtorrent
         run: npm install webtorrent
 
-        
+      # ✅ 3. 运行下载脚本（download_magnets.js 必须使用 import）
       - name: Run magnet download script
         run: node download_magnets.js
 
-      - name: Upload downloaded files
+      - name: Zip downloaded files
+        run: zip -r downloaded.zip downloads/
+
+      - name: Upload downloaded zip
         uses: actions/upload-artifact@v4
         with:
-          name: downloaded-content
-          path: downloads/
+          name: downloaded-zip
+          path: downloaded.zip
 
-      - name: Upload download log
+      - name: Upload log file
         uses: actions/upload-artifact@v4
         with:
           name: download-log
