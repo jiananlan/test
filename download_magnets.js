@@ -10,21 +10,21 @@ const __dirname = path.dirname(__filename);
 const savePath = path.join(__dirname, 'downloads');
 if (!fs.existsSync(savePath)) fs.mkdirSync(savePath, { recursive: true });
 
-// ========== 1. 读取并过滤磁力链接 ==========
+// 读取磁力链接
 let magnets = [];
 try {
   const content = fs.readFileSync('magnet_list.txt', 'utf-8');
   magnets = content
-    .split(/\r?\n/)          // 兼容 Windows/Unix 换行
+    .split(/\r?\n/)
     .map(line => line.trim())
     .filter(line => line.startsWith('magnet:'));
 } catch (err) {
-  console.error('❌ 读取 magnet_list.txt 失败:', err.message);
+  console.error('❌ 读取文件失败:', err.message);
   process.exit(1);
 }
 
 if (magnets.length === 0) {
-  console.error('❌ 未找到任何磁力链接，请检查文件内容');
+  console.error('❌ 未找到有效的磁力链接');
   process.exit(1);
 }
 
@@ -33,14 +33,14 @@ magnets.forEach((m, i) => console.log(`  [${i}] ${m}`));
 
 const outputLog = [];
 
-// ========== 2. 从磁力链接中提取 infoHash 和 trackers ==========
+/**
+ * 从磁力链接中提取 infoHash 和 trackers
+ */
 function parseMagnet(magnet) {
-  // 匹配 btih: 后跟 40 个十六进制字符（不区分大小写）
   const match = magnet.match(/btih:([a-f0-9]{40})/i);
   if (!match) return null;
   const infoHash = match[1].toLowerCase();
 
-  // 提取所有 tr= 参数
   const trackers = [];
   const trRegex = /[&?]tr=([^&]+)/g;
   let t;
@@ -50,40 +50,31 @@ function parseMagnet(magnet) {
   return { infoHash, trackers };
 }
 
-// ========== 3. 下载单个任务（带防呆保护） ==========
 function downloadOne(magnet, callback) {
-  console.log(`\n🔍 正在解析: ${magnet}`);
-
+  console.log(`\n🔍 解析: ${magnet}`);
   const parsed = parseMagnet(magnet);
   if (!parsed) {
-    console.error(`❌ 无法提取 infoHash，跳过`);
-    outputLog.push(`跳过: ${magnet} | 无法提取 infoHash`);
+    console.error(`❌ 无效磁力链接（无 btih）`);
+    outputLog.push(`跳过: ${magnet} | 无 btih`);
     callback();
     return;
   }
 
   const { infoHash, trackers } = parsed;
-  console.log(`✅ 解析成功: infoHash = ${infoHash}, trackers = ${trackers.length} 个`);
+  console.log(`✅ infoHash = ${infoHash}, trackers = ${trackers.length} 个`);
 
-  // *** 关键：二次确认 infoHash 不是 undefined/null/非字符串 ***
-  if (typeof infoHash !== 'string' || infoHash.length !== 40) {
-    console.error(`❌ infoHash 无效 (${infoHash})，跳过`);
-    outputLog.push(`跳过: ${magnet} | infoHash 无效`);
-    callback();
-    return;
-  }
+  // ===== 核心修复：构造 torrent 对象，不依赖字符串解析 =====
+  const torrentOpts = {
+    infoHash: infoHash,
+    ...(trackers.length > 0 && { announce: trackers })
+  };
 
-  // 构造选项
-  const options = { path: savePath };
-  if (trackers.length > 0) {
-    options.announce = trackers;
-  }
+  console.log(`⬇️  开始下载 (对象方式)`);
 
-  console.log(`⬇️  开始下载 (infoHash: ${infoHash}) ...`);
-
-  // *** 确保第一个参数是 infoHash 字符串，绝不是 undefined ***
-  client.add(infoHash, options, (torrent) => {
+  // 传入对象，而不是字符串
+  client.add(torrentOpts, { path: savePath }, (torrent) => {
     console.log(`✅ Torrent 已添加: ${torrent.infoHash}`);
+
     const interval = setInterval(() => {
       const percent = (torrent.progress * 100).toFixed(2);
       const speed = (torrent.downloadSpeed / 1024).toFixed(2);
@@ -105,12 +96,8 @@ function downloadOne(magnet, callback) {
       callback();
     });
   });
-
-  // 额外捕获 client.add 的同步异常（理论不会发生，但以防万一）
-  // 实际上 add 是同步注册事件，不会抛错
 }
 
-// ========== 4. 顺序执行 ==========
 function downloadAll(index = 0) {
   if (index >= magnets.length) {
     fs.writeFileSync('output.txt', outputLog.join('\n'));
@@ -118,9 +105,7 @@ function downloadAll(index = 0) {
     client.destroy();
     return;
   }
-
   downloadOne(magnets[index], () => downloadAll(index + 1));
 }
 
-// ========== 启动 ==========
 downloadAll();
